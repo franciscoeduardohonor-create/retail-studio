@@ -1,0 +1,11 @@
+fecha,producto,cantidad,precio,region
+2024-01-15,Laptop,5,1200,Norte
+2024-01-15,Mouse,50,25,Sur
+2024-01-16,Teclado,20,75,Norte
+2024-01-16,Monitor,10,350,Este
+2024-01-17,Laptop,3,1200,Sur
+2024-01-17,Mouse,30,25,Oeste
+2024-01-18,Teclado,15,75,Este
+2024-01-18,Monitor,8,350,Norte
+2024-01-19,Laptop,7,1200,Oeste
+2024-01-19,Mouse,40,25,Norte

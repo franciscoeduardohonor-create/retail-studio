@@ -1,0 +1,8 @@
+PRD001 Laptop HP 1200.00 10
+PRD002 Mouse Logitech 25.00 50
+PRD003 Teclado Mecánico 75.00 30
+PRD004 Monitor Samsung 350.00 15
+PRD005 Impresora Canon 280.00 8
+PRD006 Webcam Logitech 85.00 20
+PRD007 Auriculares Sony 120.00 25
+PRD008 SSD 500GB 95.00 40

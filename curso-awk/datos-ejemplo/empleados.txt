@@ -1,0 +1,10 @@
+Ana 2500 Ventas
+Luis 3000 IT
+Pedro 2800 Ventas
+Carmen 3200 IT
+Jorge 2200 Marketing
+Elena 2900 IT
+Rosa 2600 Marketing
+Miguel 3100 Ventas
+Laura 2700 IT
+Carlos 2400 Marketing
