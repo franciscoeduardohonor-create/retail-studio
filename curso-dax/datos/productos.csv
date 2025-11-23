@@ -1,0 +1,201 @@
+﻿ProductoID,Categoria,Marca,Familia,Modelo,PrecioLista
+P0001,Smartphones,HUAWEI,Galaxy S,Galaxy S Pro,19314.11
+P0002,Smartphones,XIAOMI,Galaxy A,Galaxy A Plus,19202.37
+P0003,Smartphones,HUAWEI,P Series,P Series Standard,4912.65
+P0004,Smartphones,APPLE,Galaxy S,Galaxy S Pro,5061.3
+P0005,Smartphones,XIAOMI,Reno,Reno Standard,3583.79
+P0006,Smartphones,XIAOMI,P Series,P Series,18429.15
+P0007,Smartphones,APPLE,Galaxy A,Galaxy A Lite,15963.85
+P0008,Smartphones,SAMSUNG,Galaxy A,Galaxy A,12297.52
+P0009,Smartphones,MOTOROLA,Galaxy A,Galaxy A Plus,24058.69
+P0010,Smartphones,MOTOROLA,Galaxy S,Galaxy S Pro,11358.4
+P0011,Smartphones,MOTOROLA,Redmi,Redmi Standard,8819.46
+P0012,Smartphones,SAMSUNG,P Series,P Series Lite,14797.02
+P0013,Smartphones,APPLE,Galaxy S,Galaxy S Standard,9449.92
+P0014,Smartphones,HUAWEI,Reno,Reno Ultra,15701.75
+P0015,Smartphones,HUAWEI,Galaxy S,Galaxy S Pro,17547.79
+P0016,Smartphones,MOTOROLA,Galaxy S,Galaxy S Plus,22062.64
+P0017,Smartphones,APPLE,Redmi,Redmi Lite,16985.06
+P0018,Smartphones,MOTOROLA,Galaxy A,Galaxy A Ultra,10815.96
+P0019,Smartphones,HUAWEI,Redmi,Redmi,23606.4
+P0020,Smartphones,HUAWEI,Galaxy S,Galaxy S Standard,16969.52
+P0021,Smartphones,OPPO,P Series,P Series Plus,6594.85
+P0022,Smartphones,APPLE,Redmi,Redmi,18139.56
+P0023,Smartphones,XIAOMI,P Series,P Series Ultra,21542.74
+P0024,Smartphones,SAMSUNG,Galaxy A,Galaxy A Pro,20711.01
+P0025,Smartphones,APPLE,Redmi,Redmi Pro,7641.62
+P0026,Smartphones,OPPO,P Series,P Series Ultra,7677.78
+P0027,Smartphones,APPLE,iPhone,iPhone,13094.74
+P0028,Smartphones,MOTOROLA,Galaxy A,Galaxy A Plus,19389.76
+P0029,Smartphones,OPPO,Redmi,Redmi,15860.89
+P0030,Smartphones,OPPO,iPhone,iPhone Ultra,7825.06
+P0031,Smartphones,XIAOMI,Reno,Reno Lite,5000.01
+P0032,Smartphones,SAMSUNG,Galaxy S,Galaxy S Plus,16803.81
+P0033,Smartphones,HUAWEI,iPhone,iPhone Standard,4397.61
+P0034,Smartphones,APPLE,Reno,Reno Lite,14640.52
+P0035,Smartphones,OPPO,Galaxy S,Galaxy S,18855.88
+P0036,Smartphones,HUAWEI,Reno,Reno Ultra,19909.17
+P0037,Smartphones,MOTOROLA,Galaxy S,Galaxy S Ultra,12564.84
+P0038,Smartphones,APPLE,Galaxy S,Galaxy S,22268.76
+P0039,Smartphones,MOTOROLA,Reno,Reno Plus,14169.0
+P0040,Smartphones,SAMSUNG,P Series,P Series Ultra,21516.73
+P0041,Smartphones,OPPO,Reno,Reno Plus,6362.46
+P0042,Smartphones,XIAOMI,Reno,Reno Standard,23206.86
+P0043,Smartphones,OPPO,Redmi,Redmi Lite,3428.49
+P0044,Smartphones,MOTOROLA,Redmi,Redmi Plus,4274.35
+P0045,Smartphones,OPPO,Galaxy S,Galaxy S Pro,19101.97
+P0046,Smartphones,SAMSUNG,Reno,Reno Plus,5824.61
+P0047,Smartphones,APPLE,Reno,Reno Plus,8831.25
+P0048,Smartphones,OPPO,iPhone,iPhone Plus,23436.1
+P0049,Smartphones,HUAWEI,P Series,P Series Plus,18684.88
+P0050,Smartphones,APPLE,P Series,P Series,11215.25
+P0051,Smartphones,OPPO,iPhone,iPhone Pro,8453.92
+P0052,Smartphones,SAMSUNG,Redmi,Redmi Pro,15942.79
+P0053,Smartphones,XIAOMI,Reno,Reno Plus,3158.2
+P0054,Smartphones,HUAWEI,P Series,P Series Pro,8036.72
+P0055,Smartphones,SAMSUNG,Redmi,Redmi Pro,14311.43
+P0056,Smartphones,MOTOROLA,P Series,P Series Lite,7713.21
+P0057,Smartphones,XIAOMI,P Series,P Series Standard,15676.66
+P0058,Smartphones,XIAOMI,iPhone,iPhone Lite,7189.02
+P0059,Smartphones,SAMSUNG,P Series,P Series Lite,10794.55
+P0060,Smartphones,APPLE,iPhone,iPhone,4191.77
+P0061,Smartphones,HUAWEI,P Series,P Series Pro,4333.48
+P0062,Smartphones,HUAWEI,Redmi,Redmi Pro,8470.44
+P0063,Smartphones,XIAOMI,Reno,Reno Lite,6084.01
+P0064,Smartphones,XIAOMI,Redmi,Redmi Lite,8495.74
+P0065,Smartphones,SAMSUNG,iPhone,iPhone Standard,5153.99
+P0066,Smartphones,HUAWEI,Reno,Reno Pro,24317.92
+P0067,Smartphones,XIAOMI,Galaxy A,Galaxy A Lite,13684.1
+P0068,Smartphones,XIAOMI,iPhone,iPhone Pro,6622.02
+P0069,Smartphones,SAMSUNG,iPhone,iPhone Ultra,23383.4
+P0070,Smartphones,APPLE,Redmi,Redmi Lite,18325.01
+P0071,Smartphones,HUAWEI,Reno,Reno,18804.98
+P0072,Smartphones,XIAOMI,Galaxy A,Galaxy A Ultra,7789.42
+P0073,Smartphones,SAMSUNG,Reno,Reno,14928.29
+P0074,Smartphones,HUAWEI,Redmi,Redmi Pro,4103.13
+P0075,Smartphones,APPLE,Reno,Reno Standard,6463.52
+P0076,Smartphones,OPPO,Galaxy S,Galaxy S Plus,4507.47
+P0077,Smartphones,SAMSUNG,P Series,P Series Plus,11883.06
+P0078,Smartphones,OPPO,Galaxy A,Galaxy A Standard,16079.42
+P0079,Smartphones,OPPO,Galaxy S,Galaxy S Lite,17462.21
+P0080,Smartphones,OPPO,Reno,Reno Ultra,23563.54
+P0081,Laptops,HP,Inspiron,Inspiron Plus,15171.59
+P0082,Laptops,HP,Inspiron,Inspiron Lite,16536.78
+P0083,Laptops,LENOVO,ThinkPad,ThinkPad Lite,24771.3
+P0084,Laptops,ACER,ThinkPad,ThinkPad Pro,22516.13
+P0085,Laptops,ACER,Inspiron,Inspiron Plus,33198.0
+P0086,Laptops,LENOVO,Pavilion,Pavilion Ultra,15694.66
+P0087,Laptops,ASUS,Aspire,Aspire,16167.96
+P0088,Laptops,ACER,ThinkPad,ThinkPad,30061.81
+P0089,Laptops,DELL,ThinkPad,ThinkPad Plus,15140.58
+P0090,Laptops,LENOVO,Aspire,Aspire Plus,15353.4
+P0091,Laptops,ACER,Pavilion,Pavilion,17257.77
+P0092,Laptops,DELL,Aspire,Aspire Lite,14780.27
+P0093,Laptops,LENOVO,ThinkPad,ThinkPad,19436.55
+P0094,Laptops,DELL,ThinkPad,ThinkPad Pro,17006.03
+P0095,Laptops,HP,Inspiron,Inspiron Plus,28013.23
+P0096,Laptops,ACER,VivoBook,VivoBook Standard,8261.08
+P0097,Laptops,LENOVO,Pavilion,Pavilion Standard,8972.76
+P0098,Laptops,DELL,Aspire,Aspire Standard,11998.53
+P0099,Laptops,HP,ThinkPad,ThinkPad Ultra,17845.59
+P0100,Laptops,LENOVO,Inspiron,Inspiron Plus,26415.8
+P0101,Laptops,LENOVO,Inspiron,Inspiron Standard,31871.64
+P0102,Laptops,ASUS,Aspire,Aspire,12172.94
+P0103,Laptops,HP,Pavilion,Pavilion Plus,31798.24
+P0104,Laptops,LENOVO,Pavilion,Pavilion,32961.16
+P0105,Laptops,ASUS,Pavilion,Pavilion Ultra,12298.34
+P0106,Laptops,LENOVO,VivoBook,VivoBook Pro,31182.02
+P0107,Laptops,HP,Pavilion,Pavilion Lite,17440.78
+P0108,Laptops,HP,Pavilion,Pavilion Pro,25820.9
+P0109,Laptops,ASUS,Inspiron,Inspiron Ultra,31337.53
+P0110,Laptops,DELL,Inspiron,Inspiron,21753.95
+P0111,Laptops,ACER,Inspiron,Inspiron Pro,11114.23
+P0112,Laptops,DELL,Pavilion,Pavilion Standard,33988.43
+P0113,Laptops,DELL,ThinkPad,ThinkPad Pro,24107.42
+P0114,Laptops,DELL,Inspiron,Inspiron Lite,24367.64
+P0115,Laptops,ACER,ThinkPad,ThinkPad Lite,32286.63
+P0116,Laptops,HP,Inspiron,Inspiron Pro,27137.2
+P0117,Laptops,LENOVO,Aspire,Aspire Standard,26545.14
+P0118,Laptops,HP,Inspiron,Inspiron Lite,9889.29
+P0119,Laptops,DELL,Aspire,Aspire Ultra,25911.46
+P0120,Laptops,LENOVO,Inspiron,Inspiron Standard,16350.69
+P0121,Tablets,APPLE,MatePad,MatePad Lite,11366.5
+P0122,Tablets,LENOVO,Tab M,Tab M Lite,10979.15
+P0123,Tablets,APPLE,Tab M,Tab M Standard,9829.26
+P0124,Tablets,APPLE,Galaxy Tab,Galaxy Tab Ultra,6442.96
+P0125,Tablets,APPLE,MatePad,MatePad Lite,8301.43
+P0126,Tablets,LENOVO,iPad,iPad,5036.3
+P0127,Tablets,SAMSUNG,MatePad,MatePad Standard,10966.25
+P0128,Tablets,HUAWEI,Galaxy Tab,Galaxy Tab Plus,11073.55
+P0129,Tablets,LENOVO,Tab M,Tab M Plus,3293.1
+P0130,Tablets,LENOVO,iPad,iPad Standard,13196.85
+P0131,Tablets,SAMSUNG,iPad,iPad Lite,13633.64
+P0132,Tablets,LENOVO,iPad,iPad Lite,7795.83
+P0133,Tablets,LENOVO,Galaxy Tab,Galaxy Tab Pro,12341.04
+P0134,Tablets,LENOVO,Tab M,Tab M,9215.49
+P0135,Tablets,SAMSUNG,Tab M,Tab M Pro,8477.54
+P0136,Tablets,APPLE,MatePad,MatePad Lite,10351.83
+P0137,Tablets,APPLE,iPad,iPad Plus,11923.87
+P0138,Tablets,APPLE,iPad,iPad Ultra,12021.32
+P0139,Tablets,HUAWEI,iPad,iPad,5870.95
+P0140,Tablets,APPLE,Galaxy Tab,Galaxy Tab,6428.74
+P0141,Tablets,HUAWEI,MatePad,MatePad Ultra,13716.32
+P0142,Tablets,SAMSUNG,Tab M,Tab M Plus,5775.14
+P0143,Tablets,LENOVO,Tab M,Tab M Pro,7978.41
+P0144,Tablets,HUAWEI,iPad,iPad Lite,3747.19
+P0145,Tablets,APPLE,iPad,iPad Standard,14352.74
+P0146,Tablets,SAMSUNG,iPad,iPad Lite,3070.75
+P0147,Tablets,HUAWEI,MatePad,MatePad Lite,13241.38
+P0148,Tablets,APPLE,Tab M,Tab M Lite,5633.06
+P0149,Tablets,APPLE,iPad,iPad Pro,7666.29
+P0150,Tablets,APPLE,Tab M,Tab M Lite,14034.5
+P0151,Smartwatches,SAMSUNG,Watch GT,Watch GT Standard,5168.55
+P0152,Smartwatches,SAMSUNG,Galaxy Watch,Galaxy Watch,4285.98
+P0153,Smartwatches,HUAWEI,Mi Watch,Mi Watch Pro,3191.02
+P0154,Smartwatches,APPLE,Mi Watch,Mi Watch Lite,3624.5
+P0155,Smartwatches,HUAWEI,Apple Watch,Apple Watch Lite,3139.76
+P0156,Smartwatches,SAMSUNG,Watch GT,Watch GT Pro,6368.66
+P0157,Smartwatches,SAMSUNG,Apple Watch,Apple Watch Plus,5725.94
+P0158,Smartwatches,SAMSUNG,Galaxy Watch,Galaxy Watch Plus,2795.84
+P0159,Smartwatches,SAMSUNG,Mi Watch,Mi Watch Plus,2320.44
+P0160,Smartwatches,SAMSUNG,Mi Watch,Mi Watch Lite,6046.52
+P0161,Smartwatches,APPLE,Mi Watch,Mi Watch Standard,5447.11
+P0162,Smartwatches,SAMSUNG,Mi Watch,Mi Watch Ultra,2202.64
+P0163,Smartwatches,SAMSUNG,Apple Watch,Apple Watch Standard,5902.76
+P0164,Smartwatches,HUAWEI,Watch GT,Watch GT,2789.14
+P0165,Smartwatches,XIAOMI,Galaxy Watch,Galaxy Watch,6521.13
+P0166,Smartwatches,SAMSUNG,Galaxy Watch,Galaxy Watch Ultra,4962.84
+P0167,Smartwatches,APPLE,Galaxy Watch,Galaxy Watch Standard,5709.03
+P0168,Smartwatches,SAMSUNG,Watch GT,Watch GT Lite,2186.0
+P0169,Smartwatches,APPLE,Watch GT,Watch GT,2494.44
+P0170,Smartwatches,XIAOMI,Apple Watch,Apple Watch Standard,6753.29
+P0171,Smartwatches,HUAWEI,Watch GT,Watch GT Lite,6867.27
+P0172,Smartwatches,APPLE,Apple Watch,Apple Watch Plus,6899.75
+P0173,Smartwatches,SAMSUNG,Apple Watch,Apple Watch Lite,3085.11
+P0174,Smartwatches,HUAWEI,Watch GT,Watch GT Ultra,1686.55
+P0175,Smartwatches,APPLE,Mi Watch,Mi Watch Lite,2878.78
+P0176,Auriculares,SONY,WH-1000X,WH-1000X Ultra,4461.44
+P0177,Auriculares,SONY,AirPods,AirPods Pro,2824.82
+P0178,Auriculares,JBL,Galaxy Buds,Galaxy Buds Plus,3740.34
+P0179,Auriculares,XIAOMI,AirPods,AirPods Plus,3607.74
+P0180,Auriculares,XIAOMI,Redmi Buds,Redmi Buds Pro,918.74
+P0181,Auriculares,JBL,Redmi Buds,Redmi Buds,1594.87
+P0182,Auriculares,APPLE,WH-1000X,WH-1000X Lite,2990.63
+P0183,Auriculares,SONY,Redmi Buds,Redmi Buds,2976.75
+P0184,Auriculares,SONY,Redmi Buds,Redmi Buds Ultra,1879.8
+P0185,Auriculares,JBL,Galaxy Buds,Galaxy Buds,1366.63
+P0186,Auriculares,SAMSUNG,AirPods,AirPods,1333.17
+P0187,Auriculares,JBL,Redmi Buds,Redmi Buds Ultra,3760.63
+P0188,Auriculares,APPLE,AirPods,AirPods Ultra,4912.3
+P0189,Auriculares,JBL,WH-1000X,WH-1000X Plus,2123.96
+P0190,Auriculares,SONY,Galaxy Buds,Galaxy Buds,2903.61
+P0191,Auriculares,SONY,Galaxy Buds,Galaxy Buds Pro,2990.12
+P0192,Auriculares,JBL,Redmi Buds,Redmi Buds Pro,4427.24
+P0193,Auriculares,APPLE,WH-1000X,WH-1000X Lite,2654.21
+P0194,Auriculares,SONY,Tune,Tune Pro,1636.15
+P0195,Auriculares,XIAOMI,Galaxy Buds,Galaxy Buds Pro,2303.18
+P0196,Auriculares,SAMSUNG,AirPods,AirPods,3589.03
+P0197,Auriculares,JBL,Tune,Tune Standard,4771.07
+P0198,Auriculares,SAMSUNG,Tune,Tune Pro,3011.33
+P0199,Auriculares,XIAOMI,AirPods,AirPods Standard,4058.33
+P0200,Auriculares,JBL,AirPods,AirPods Lite,2527.32

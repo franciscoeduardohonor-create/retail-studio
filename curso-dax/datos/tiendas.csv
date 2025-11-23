@@ -1,0 +1,101 @@
+﻿TiendaID,NombreTienda,Ciudad,Estado,Region
+T001,Tienda Torreón Mall,Torreón,Coahuila,Norte
+T002,Tienda Torreón Mall,Torreón,Coahuila,Norte
+T003,Tienda Chihuahua Plaza,Chihuahua,Chihuahua,Norte
+T004,Tienda Nogales Centro,Nogales,Sonora,Norte
+T005,Tienda Hermosillo Plaza,Hermosillo,Sonora,Norte
+T006,Tienda Chihuahua Centro,Chihuahua,Chihuahua,Norte
+T007,Tienda Torreón Mall,Torreón,Coahuila,Norte
+T008,Tienda Torreón Centro,Torreón,Coahuila,Norte
+T009,Tienda Nogales Forum,Nogales,Sonora,Norte
+T010,Tienda Saltillo Plaza,Saltillo,Coahuila,Norte
+T011,Tienda Guadalupe Mall,Guadalupe,Nuevo León,Norte
+T012,Tienda Nogales Centro,Nogales,Sonora,Norte
+T013,Tienda Hermosillo Forum,Hermosillo,Sonora,Norte
+T014,Tienda Hermosillo Centro,Hermosillo,Sonora,Norte
+T015,Tienda Nogales Mall,Nogales,Sonora,Norte
+T016,Tienda San Pedro Centro,San Pedro,Nuevo León,Norte
+T017,Tienda Torreón Galerias,Torreón,Coahuila,Norte
+T018,Tienda Guadalupe Mall,Guadalupe,Nuevo León,Norte
+T019,Tienda Torreón Centro,Torreón,Coahuila,Norte
+T020,Tienda Ciudad Juárez Forum,Ciudad Juárez,Chihuahua,Norte
+T021,Tienda Monterrey Centro,Monterrey,Nuevo León,Norte
+T022,Tienda Hermosillo Forum,Hermosillo,Sonora,Norte
+T023,Tienda Chihuahua Galerias,Chihuahua,Chihuahua,Norte
+T024,Tienda Torreón Plaza,Torreón,Coahuila,Norte
+T025,Tienda Torreón Centro,Torreón,Coahuila,Norte
+T026,Tienda Guanajuato Galerias,Guanajuato,Guanajuato,Centro
+T027,Tienda San Juan del Río Centro,San Juan del Río,Querétaro,Centro
+T028,Tienda Naucalpan Galerias,Naucalpan,Estado de México,Centro
+T029,Tienda Guanajuato Galerias,Guanajuato,Guanajuato,Centro
+T030,Tienda Coapa Centro,Coapa,CDMX,Centro
+T031,Tienda San Juan del Río Forum,San Juan del Río,Querétaro,Centro
+T032,Tienda Coapa Mall,Coapa,CDMX,Centro
+T033,Tienda Coapa Galerias,Coapa,CDMX,Centro
+T034,Tienda Santa Fe Mall,Santa Fe,CDMX,Centro
+T035,Tienda San Juan del Río Galerias,San Juan del Río,Querétaro,Centro
+T036,Tienda Santa Fe Forum,Santa Fe,CDMX,Centro
+T037,Tienda Naucalpan Galerias,Naucalpan,Estado de México,Centro
+T038,Tienda León Centro,León,Guanajuato,Centro
+T039,Tienda Ecatepec Plaza,Ecatepec,Estado de México,Centro
+T040,Tienda Querétaro Mall,Querétaro,Querétaro,Centro
+T041,Tienda León Plaza,León,Guanajuato,Centro
+T042,Tienda Coapa Centro,Coapa,CDMX,Centro
+T043,Tienda Naucalpan Forum,Naucalpan,Estado de México,Centro
+T044,Tienda San Juan del Río Galerias,San Juan del Río,Querétaro,Centro
+T045,Tienda León Galerias,León,Guanajuato,Centro
+T046,Tienda Naucalpan Plaza,Naucalpan,Estado de México,Centro
+T047,Tienda Toluca Forum,Toluca,Estado de México,Centro
+T048,Tienda Guanajuato Mall,Guanajuato,Guanajuato,Centro
+T049,Tienda Querétaro Forum,Querétaro,Querétaro,Centro
+T050,Tienda San Juan del Río Plaza,San Juan del Río,Querétaro,Centro
+T051,Tienda Celaya Galerias,Celaya,Guanajuato,Centro
+T052,Tienda San Juan del Río Mall,San Juan del Río,Querétaro,Centro
+T053,Tienda Guanajuato Forum,Guanajuato,Guanajuato,Centro
+T054,Tienda Ecatepec Plaza,Ecatepec,Estado de México,Centro
+T055,Tienda León Galerias,León,Guanajuato,Centro
+T056,Tienda Oaxaca Galerias,Oaxaca,Oaxaca,Sur
+T057,Tienda Cholula Plaza,Cholula,Puebla,Sur
+T058,Tienda Puebla Plaza,Puebla,Puebla,Sur
+T059,Tienda Veracruz Galerias,Veracruz,Veracruz,Sur
+T060,Tienda Oaxaca Centro,Oaxaca,Oaxaca,Sur
+T061,Tienda Tuxtla Gutiérrez Plaza,Tuxtla Gutiérrez,Chiapas,Sur
+T062,Tienda Oaxaca Forum,Oaxaca,Oaxaca,Sur
+T063,Tienda Xalapa Centro,Xalapa,Veracruz,Sur
+T064,Tienda Xalapa Forum,Xalapa,Veracruz,Sur
+T065,Tienda Puebla Mall,Puebla,Puebla,Sur
+T066,Tienda Oaxaca Forum,Oaxaca,Oaxaca,Sur
+T067,Tienda Tuxtla Gutiérrez Galerias,Tuxtla Gutiérrez,Chiapas,Sur
+T068,Tienda Oaxaca Galerias,Oaxaca,Oaxaca,Sur
+T069,Tienda Tuxtla Gutiérrez Centro,Tuxtla Gutiérrez,Chiapas,Sur
+T070,Tienda Oaxaca Centro,Oaxaca,Oaxaca,Sur
+T071,Tienda Tepic Forum,Tepic,Nayarit,Occidente
+T072,Tienda Colima Plaza,Colima,Colima,Occidente
+T073,Tienda Colima Plaza,Colima,Colima,Occidente
+T074,Tienda Morelia Mall,Morelia,Michoacán,Occidente
+T075,Tienda Colima Galerias,Colima,Colima,Occidente
+T076,Tienda Morelia Galerias,Morelia,Michoacán,Occidente
+T077,Tienda Tepic Forum,Tepic,Nayarit,Occidente
+T078,Tienda Zapopan Forum,Zapopan,Jalisco,Occidente
+T079,Tienda Morelia Galerias,Morelia,Michoacán,Occidente
+T080,Tienda Tepic Galerias,Tepic,Nayarit,Occidente
+T081,Tienda Tepic Forum,Tepic,Nayarit,Occidente
+T082,Tienda Uruapan Galerias,Uruapan,Michoacán,Occidente
+T083,Tienda Guadalajara Galerias,Guadalajara,Jalisco,Occidente
+T084,Tienda Tepic Forum,Tepic,Nayarit,Occidente
+T085,Tienda Tlaquepaque Galerias,Tlaquepaque,Jalisco,Occidente
+T086,Tienda Tepic Mall,Tepic,Nayarit,Occidente
+T087,Tienda Tlaquepaque Galerias,Tlaquepaque,Jalisco,Occidente
+T088,Tienda Tepic Mall,Tepic,Nayarit,Occidente
+T089,Tienda Tepic Plaza,Tepic,Nayarit,Occidente
+T090,Tienda Tepic Centro,Tepic,Nayarit,Occidente
+T091,Tienda San Luis Potosí Forum,San Luis Potosí,San Luis Potosí,Bajío
+T092,Tienda Zacatecas Mall,Zacatecas,Zacatecas,Bajío
+T093,Tienda Zacatecas Centro,Zacatecas,Zacatecas,Bajío
+T094,Tienda Zacatecas Galerias,Zacatecas,Zacatecas,Bajío
+T095,Tienda Aguascalientes Plaza,Aguascalientes,Aguascalientes,Bajío
+T096,Tienda San Luis Potosí Mall,San Luis Potosí,San Luis Potosí,Bajío
+T097,Tienda San Luis Potosí Plaza,San Luis Potosí,San Luis Potosí,Bajío
+T098,Tienda Zacatecas Forum,Zacatecas,Zacatecas,Bajío
+T099,Tienda San Luis Potosí Centro,San Luis Potosí,San Luis Potosí,Bajío
+T100,Tienda Zacatecas Plaza,Zacatecas,Zacatecas,Bajío
