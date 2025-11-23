@@ -1,0 +1,22 @@
+# HC Analysis - Python Dependencies
+# ============================================================================
+# Instalar con: pip install -r requirements.txt
+# ============================================================================
+
+# Manipulación y análisis de datos
+pandas>=2.0.0
+
+# Lectura de archivos Excel (.xlsb)
+pyxlsb>=1.0.10
+
+# Escritura de archivos Excel (.xlsx)
+openpyxl>=3.1.0
+
+# Manejo de rutas (Python < 3.4)
+pathlib2>=2.3.7; python_version < '3.4'
+
+# Opcional: Para mejor rendimiento con Excel
+# xlsxwriter>=3.1.0
+
+# Opcional: Para visualización de progreso
+# tqdm>=4.65.0
