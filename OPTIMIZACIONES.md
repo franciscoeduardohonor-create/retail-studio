@@ -2,9 +2,18 @@
 
 ## 📋 Resumen de Archivos
 
+### Análisis de Ventas Coppel
 - **`coppel_analysis_optimized.R`**: Versión optimizada en R
 - **`coppel_analysis.py`**: Versión equivalente en Python
-- Este documento: Explicación de mejoras
+
+### Prueba de Archivos HC
+- **`hc_file_tester_optimized.R`**: Script de diagnóstico HC en R
+- **`hc_file_tester.py`**: Script de diagnóstico HC en Python
+- **`HC_TESTER_README.md`**: Documentación específica de HC tester
+
+### Documentación
+- Este documento: Explicación de mejoras del análisis Coppel
+- **`HC_TESTER_README.md`**: Documentación detallada de scripts de prueba HC
 
 ---
 
