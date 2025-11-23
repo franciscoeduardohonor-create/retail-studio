@@ -1,0 +1,341 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# ============================================================================
+# EJEMPLO 4: PROVISIONAMIENTO CON SHELL SCRIPTS
+# ============================================================================
+#
+# En este ejemplo aprenderás:
+# - Qué es el provisionamiento
+# - Ejecutar comandos inline
+# - Ejecutar scripts externos
+# - Provisionamiento solo la primera vez vs siempre
+# - Variables en provisionamiento
+#
+# El provisionamiento automatiza la instalación y configuración de software
+# en tu VM. ¡No más instalaciones manuales!
+#
+# CÓMO USAR:
+# 1. vagrant up (ejecuta provisionamiento automáticamente)
+# 2. vagrant ssh
+# 3. Verifica que nginx y git estén instalados
+# ============================================================================
+
+Vagrant.configure("2") do |config|
+
+  # Configuración básica
+  config.vm.box = "ubuntu/focal64"
+  config.vm.hostname = "servidor-web"
+
+  # ====================================
+  # CONFIGURACIÓN DE RED
+  # ====================================
+
+  # Port forwarding: mapea puerto 80 de la VM al 8080 de tu host
+  # Podrás acceder a nginx desde tu navegador en: http://localhost:8080
+  config.vm.network "forwarded_port", guest: 80, host: 8080
+
+  # ====================================
+  # PROVISIONAMIENTO INLINE (EN LÍNEA)
+  # ====================================
+
+  # Este script se ejecuta cuando haces "vagrant up" la primera vez
+  # También puedes ejecutarlo manualmente con: vagrant provision
+
+  config.vm.provision "shell", inline: <<-SHELL
+
+    # El script corre como root por defecto
+    # Todas las líneas aquí son comandos bash
+
+    echo "============================================"
+    echo "Iniciando provisionamiento..."
+    echo "============================================"
+
+    # Actualizar lista de paquetes
+    echo "📦 Actualizando repositorios..."
+    apt-get update -qq
+
+    # Instalar nginx (servidor web)
+    echo "🌐 Instalando Nginx..."
+    apt-get install -y nginx
+
+    # Iniciar y habilitar nginx
+    systemctl start nginx
+    systemctl enable nginx
+
+    # Instalar git
+    echo "📚 Instalando Git..."
+    apt-get install -y git
+
+    # Instalar utilidades útiles
+    echo "🛠️  Instalando herramientas..."
+    apt-get install -y curl wget vim htop tree
+
+    # Crear página web personalizada
+    echo "📝 Creando página web..."
+    cat > /var/www/html/index.html <<EOF
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Vagrant Funciona!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .info { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .success { color: #00ff00; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 ¡Vagrant + Nginx Funcionando!</h1>
+        <div class="info">
+            <p><strong>Hostname:</strong> $(hostname)</p>
+            <p><strong>IP:</strong> $(hostname -I | awk '{print $1}')</p>
+            <p><strong>Sistema:</strong> $(lsb_release -d | cut -f2)</p>
+            <p><strong>Fecha:</strong> $(date)</p>
+        </div>
+        <h2 class="success">✅ Provisionamiento Exitoso</h2>
+        <p>Esta página fue creada automáticamente por Vagrant durante el provisionamiento.</p>
+        <h3>Software Instalado:</h3>
+        <ul>
+            <li>Nginx $(nginx -v 2>&1 | cut -d/ -f2)</li>
+            <li>Git $(git --version | cut -d' ' -f3)</li>
+            <li>Curl $(curl --version | head -1 | cut -d' ' -f2)</li>
+        </ul>
+    </div>
+</body>
+</html>
+EOF
+
+    # Configurar nginx
+    echo "⚙️  Configurando Nginx..."
+    # Cambiar usuario de nginx para evitar problemas de permisos
+    sed -i 's/user www-data/user vagrant/g' /etc/nginx/nginx.conf
+
+    # Reiniciar nginx para aplicar cambios
+    systemctl restart nginx
+
+    echo ""
+    echo "============================================"
+    echo "✅ Provisionamiento completado!"
+    echo "============================================"
+    echo ""
+    echo "🌐 Abre tu navegador en: http://localhost:8080"
+    echo "🔧 Nginx instalado y configurado"
+    echo "📚 Git disponible: $(git --version)"
+    echo ""
+    echo "Conectarse: vagrant ssh"
+    echo ""
+
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO PRIVILEGED vs UNPRIVILEGED
+  # ====================================
+
+  # Por defecto, los scripts corren como root (privileged: true)
+  # Puedes ejecutar scripts como usuario vagrant:
+
+  config.vm.provision "shell", privileged: false, inline: <<-SHELL
+    # Este script corre como usuario 'vagrant' (no root)
+
+    echo "👤 Configurando usuario vagrant..."
+
+    # Configurar Git para el usuario
+    git config --global user.name "Vagrant User"
+    git config --global user.email "vagrant@example.com"
+    git config --global color.ui auto
+
+    # Crear directorio de proyectos
+    mkdir -p ~/proyectos
+
+    # Crear alias útiles en .bashrc
+    cat >> ~/.bashrc <<EOF
+
+# Alias personalizados
+alias ll='ls -lah'
+alias gs='git status'
+alias gp='git pull'
+alias ..='cd ..'
+alias projects='cd ~/proyectos'
+
+# Prompt personalizado
+PS1='\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '
+
+EOF
+
+    echo "✅ Usuario vagrant configurado"
+
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO CON SCRIPT EXTERNO
+  # ====================================
+
+  # También puedes tener scripts en archivos separados
+  # Descomenta esto si creas el archivo provision.sh:
+  # config.vm.provision "shell", path: "provision.sh"
+
+  # ====================================
+  # PROVISIONAMIENTO QUE SIEMPRE SE EJECUTA
+  # ====================================
+
+  # Por defecto, provision solo corre en el primer "vagrant up"
+  # Con run: "always" se ejecuta cada vez que haces vagrant up o reload
+
+  config.vm.provision "shell", run: "always", inline: <<-SHELL
+    echo ""
+    echo "=========================================="
+    echo "Estado del Sistema"
+    echo "=========================================="
+    echo "🕒 Fecha: $(date)"
+    echo "⏱️  Uptime: $(uptime -p)"
+    echo "💾 Memoria:"
+    free -h | grep Mem
+    echo "💿 Disco:"
+    df -h / | tail -1
+    echo "🌐 Nginx: $(systemctl is-active nginx)"
+    echo "=========================================="
+    echo ""
+  SHELL
+
+  # ====================================
+  # VARIABLES EN PROVISIONAMIENTO
+  # ====================================
+
+  # Puedes pasar variables de Ruby a tu script shell
+
+  # Definir variables Ruby
+  mi_app = "MiAplicacion"
+  version = "1.0.0"
+  entorno = "desarrollo"
+
+  config.vm.provision "shell", env: {
+    "APP_NAME" => mi_app,
+    "APP_VERSION" => version,
+    "ENVIRONMENT" => entorno
+  }, inline: <<-SHELL
+
+    # Las variables están disponibles en el script
+
+    echo "Configurando aplicación..."
+    echo "Nombre: $APP_NAME"
+    echo "Versión: $APP_VERSION"
+    echo "Entorno: $ENVIRONMENT"
+
+    # Crear archivo de configuración
+    cat > /home/vagrant/app-config.txt <<EOF
+APP_NAME=$APP_NAME
+APP_VERSION=$APP_VERSION
+ENVIRONMENT=$ENVIRONMENT
+INSTALLED_AT=$(date)
+EOF
+
+    chown vagrant:vagrant /home/vagrant/app-config.txt
+
+  SHELL
+
+  # ====================================
+  # CONFIGURACIÓN DEL PROVIDER
+  # ====================================
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "VM-Web-Provisionada"
+    vb.memory = "1024"
+    vb.cpus = 1
+  end
+
+end
+
+# ============================================================================
+# TIPOS DE PROVISIONAMIENTO:
+# ============================================================================
+#
+# 1. INLINE (lo que usamos arriba)
+#    - Script directamente en el Vagrantfile
+#    - Útil para scripts cortos
+#
+# 2. PATH (script externo)
+#    config.vm.provision "shell", path: "script.sh"
+#    - Script en archivo separado
+#    - Útil para scripts largos o reutilizables
+#
+# 3. URL (script remoto)
+#    config.vm.provision "shell", path: "https://ejemplo.com/setup.sh"
+#    - Descarga y ejecuta script desde URL
+#
+# ============================================================================
+# OPCIONES DE PROVISIONAMIENTO:
+# ============================================================================
+#
+# privileged: true/false
+#   - true: ejecuta como root (default)
+#   - false: ejecuta como vagrant
+#
+# run: "once"/"always"
+#   - "once": solo primera vez (default)
+#   - "always": cada vagrant up/reload
+#
+# env: { "VAR" => "valor" }
+#   - Pasar variables de entorno
+#
+# args: ["arg1", "arg2"]
+#   - Pasar argumentos posicionales ($1, $2, ...)
+#
+# name: "nombre descriptivo"
+#   - Identificar el provisionador
+#
+# ============================================================================
+# COMANDOS DE PROVISIONAMIENTO:
+# ============================================================================
+#
+# vagrant up              → Crea VM y provisiona (primera vez)
+# vagrant provision       → Ejecuta provisionamiento en VM existente
+# vagrant reload --provision  → Reinicia y provisiona
+# vagrant up --provision  → Fuerza provisionamiento
+# vagrant up --no-provision   → No ejecuta provisionamiento
+#
+# Provisionar un provisionador específico:
+# vagrant provision --provision-with shell
+#
+# ============================================================================
+# EJERCICIOS:
+# ============================================================================
+#
+# 1. Accede a http://localhost:8080 desde tu navegador
+#    Deberías ver la página personalizada
+#
+# 2. Conéctate a la VM y verifica instalaciones:
+#    vagrant ssh
+#    nginx -v
+#    git --version
+#    cat ~/app-config.txt
+#
+# 3. Modifica el HTML inline y re-provisiona:
+#    (edita el HTML en este Vagrantfile)
+#    vagrant provision
+#    Refresca el navegador
+#
+# 4. Agrega la instalación de nodejs:
+#    Agrega estas líneas al script inline:
+#    curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+#    apt-get install -y nodejs
+#    vagrant provision
+#    vagrant ssh -c "node --version"
+#
+# ============================================================================

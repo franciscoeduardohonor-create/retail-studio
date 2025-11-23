@@ -1,0 +1,152 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Solución Ejercicio 3: Servidor Web Personalizado
+
+Vagrant.configure("2") do |config|
+
+  # Ubuntu 20.04
+  config.vm.box = "ubuntu/focal64"
+  config.vm.hostname = "servidor-web"
+
+  # Port forwarding: puerto 80 de la VM al 8888 del host
+  config.vm.network "forwarded_port", guest: 80, host: 8888
+
+  # Carpeta compartida para el sitio web
+  config.vm.synced_folder "./sitio-web", "/var/www/html",
+    create: true,
+    owner: "www-data",
+    group: "www-data"
+
+  # Provisionamiento: instalar Apache y MySQL
+  config.vm.provision "shell", inline: <<-SHELL
+    # Actualizar repositorios
+    apt-get update -qq
+
+    # Instalar Apache2
+    echo "Instalando Apache2..."
+    apt-get install -y apache2
+
+    # Instalar MySQL
+    echo "Instalando MySQL..."
+    # DEBIAN_FRONTEND=noninteractive evita prompts interactivos
+    DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
+
+    # Iniciar servicios
+    systemctl start apache2
+    systemctl enable apache2
+    systemctl start mysql
+    systemctl enable mysql
+
+    # Obtener versión de Apache
+    APACHE_VERSION=$(apache2 -v | head -1 | cut -d' ' -f3)
+
+    # Crear página HTML personalizada
+    # NOTA: Cambia "Tu Nombre" por tu nombre real
+    cat > /var/www/html/index.html <<EOF
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Servidor Web - Vagrant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .info-box {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #00ff88;
+        }
+        .info-box p {
+            margin: 10px 0;
+            font-size: 1.1em;
+        }
+        .success {
+            text-align: center;
+            color: #00ff88;
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🚀 Servidor Web Vagrant</h1>
+
+        <p class="success">✅ Ejercicio 3 Completado</p>
+
+        <div class="info-box">
+            <p><strong>👤 Creado por:</strong> Tu Nombre</p>
+            <p><strong>📅 Fecha:</strong> $(date '+%d/%m/%Y %H:%M:%S')</p>
+            <p><strong>🌐 Versión de Apache:</strong> $APACHE_VERSION</p>
+            <p><strong>💻 Hostname:</strong> $(hostname)</p>
+            <p><strong>🔧 Sistema Operativo:</strong> $(lsb_release -d | cut -f2)</p>
+        </div>
+
+        <h2>📋 Software Instalado</h2>
+        <ul>
+            <li>Apache2 $APACHE_VERSION</li>
+            <li>MySQL $(mysql --version | cut -d' ' -f6)</li>
+        </ul>
+
+        <div class="footer">
+            <p>🎓 Curso de Vagrant - Módulo 1, Ejercicio 3</p>
+            <p>Accediendo desde: <code>http://localhost:8888</code></p>
+        </div>
+    </div>
+</body>
+</html>
+EOF
+
+    # Asegurar permisos correctos
+    chown -R www-data:www-data /var/www/html
+    chmod -R 755 /var/www/html
+
+    # Reiniciar Apache
+    systemctl restart apache2
+
+    echo ""
+    echo "================================================"
+    echo "✅ Servidor Web configurado correctamente"
+    echo "================================================"
+    echo "🌐 Accede a: http://localhost:8888"
+    echo "📁 Archivos web en: /var/www/html"
+    echo ""
+
+  SHELL
+
+  # Configuración de recursos
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "Servidor-Web-Ejercicio-3"
+    vb.memory = "1024"
+    vb.cpus = 1
+  end
+
+end

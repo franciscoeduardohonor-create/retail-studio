@@ -1,0 +1,274 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# ============================================================================
+# EJEMPLO 3: SINCRONIZACIÓN DE CARPETAS
+# ============================================================================
+#
+# En este ejemplo aprenderás:
+# - Cómo funcionan las carpetas compartidas (synced folders)
+# - Configurar carpetas adicionales compartidas
+# - Diferentes tipos de sincronización
+# - Permisos y opciones avanzadas
+#
+# PREPARACIÓN:
+# 1. Crea las carpetas antes de vagrant up:
+#    mkdir -p datos proyecto/src proyecto/logs
+# 2. vagrant up
+# 3. vagrant ssh
+# 4. Explora las carpetas compartidas
+# ============================================================================
+
+Vagrant.configure("2") do |config|
+
+  # Box base
+  config.vm.box = "ubuntu/focal64"
+  config.vm.hostname = "servidor-compartido"
+
+  # ====================================
+  # CARPETA COMPARTIDA POR DEFECTO
+  # ====================================
+
+  # Por defecto, Vagrant SIEMPRE comparte el directorio donde está
+  # el Vagrantfile con /vagrant dentro de la VM
+  #
+  # HOST (tu PC):          /ruta/a/ejemplo-03-compartir-carpetas/
+  # GUEST (dentro VM):     /vagrant/
+  #
+  # Esta sincronización es BIDIRECCIONAL:
+  # - Creas archivo en host → aparece en guest
+  # - Creas archivo en guest → aparece en host
+  #
+  # Si quieres DESHABILITAR esta carpeta por defecto:
+  # config.vm.synced_folder ".", "/vagrant", disabled: true
+
+  # ====================================
+  # CARPETAS COMPARTIDAS PERSONALIZADAS
+  # ====================================
+
+  # SINTAXIS GENERAL:
+  # config.vm.synced_folder "RUTA_HOST", "RUTA_GUEST", OPCIONES
+
+  # Ejemplo 1: Compartir carpeta de datos
+  # - En HOST: ./datos (en este directorio)
+  # - En GUEST: /home/vagrant/datos
+  config.vm.synced_folder "./datos", "/home/vagrant/datos",
+    create: true,           # Crear carpeta en host si no existe
+    owner: "vagrant",       # Usuario dueño en el guest
+    group: "vagrant",       # Grupo dueño en el guest
+    mount_options: ["dmode=775,fmode=664"]  # Permisos: carpetas 775, archivos 664
+
+  # Ejemplo 2: Compartir código fuente de un proyecto
+  # - En HOST: ./proyecto/src
+  # - En GUEST: /var/www/html
+  config.vm.synced_folder "./proyecto/src", "/var/www/html",
+    create: true,
+    type: "virtualbox",     # Tipo de sincronización (por defecto)
+    owner: "www-data",      # Usuario de nginx/apache
+    group: "www-data"
+
+  # Ejemplo 3: Carpeta de logs (solo lectura desde el guest)
+  # Útil para que la VM escriba logs pero no pueda modificar configs
+  config.vm.synced_folder "./proyecto/logs", "/var/log/miapp",
+    create: true,
+    owner: "vagrant",
+    group: "vagrant",
+    mount_options: ["dmode=755,fmode=644"]
+
+  # Ejemplo 4: Carpeta temporal (con mejor rendimiento)
+  # type: "rsync" copia archivos una sola vez (no sincroniza en tiempo real)
+  # Útil para carpetas grandes donde no necesitas sincronización constante
+  # config.vm.synced_folder "./cache", "/tmp/cache",
+  #   type: "rsync",
+  #   rsync__exclude: [".git/", "node_modules/"],  # Excluir carpetas
+  #   rsync__auto: true  # Auto-sincronizar cuando detecte cambios
+
+  # ====================================
+  # TIPOS DE SINCRONIZACIÓN
+  # ====================================
+
+  # Vagrant soporta varios tipos (backends) de sincronización:
+
+  # 1. VirtualBox Shared Folders (por defecto)
+  #    - Pros: Automático, bidireccional, tiempo real
+  #    - Contras: Puede ser lento con muchos archivos
+  #    - Uso: Desarrollo general
+  #    type: "virtualbox"
+
+  # 2. NFS (Network File System)
+  #    - Pros: Muy rápido, excelente rendimiento
+  #    - Contras: Solo Linux/Mac host, requiere permisos admin
+  #    - Uso: Proyectos grandes con muchos archivos
+  #    type: "nfs"
+  #    # Ejemplo:
+  #    # config.vm.synced_folder "./app", "/app", type: "nfs"
+
+  # 3. RSync (copia una vez)
+  #    - Pros: Muy rápido, no afecta rendimiento de la VM
+  #    - Contras: No es bidireccional, requiere vagrant rsync-auto
+  #    - Uso: Despliegues, cuando no necesitas editar desde VM
+  #    type: "rsync"
+
+  # 4. SMB (Windows)
+  #    - Pros: Rápido en Windows
+  #    - Contras: Solo Windows host
+  #    - Uso: Windows como host
+  #    type: "smb"
+
+  # ====================================
+  # OPCIONES COMUNES
+  # ====================================
+
+  # create: true/false
+  #   - Crear carpeta en host si no existe
+
+  # disabled: true/false
+  #   - Deshabilitar una carpeta compartida
+
+  # owner: "usuario"
+  #   - Usuario dueño en el guest
+
+  # group: "grupo"
+  #   - Grupo dueño en el guest
+
+  # mount_options: [...]
+  #   - dmode: permisos para directorios (ej: 775)
+  #   - fmode: permisos para archivos (ej: 664)
+  #   - uid: ID de usuario
+  #   - gid: ID de grupo
+
+  # type: "virtualbox|nfs|rsync|smb"
+  #   - Tipo de sincronización
+
+  # ====================================
+  # PROVISIONAMIENTO DE DEMOSTRACIÓN
+  # ====================================
+
+  # Vamos a crear algunos archivos de prueba para demostrar
+  config.vm.provision "shell", inline: <<-SHELL
+
+    echo "============================================"
+    echo "Demostrando Carpetas Compartidas"
+    echo "============================================"
+
+    # Crear archivo en carpeta por defecto
+    echo "Hola desde la VM" > /vagrant/desde-vm.txt
+
+    # Crear archivo en carpeta de datos
+    echo "Datos generados en: $(date)" > /home/vagrant/datos/datos-vm.txt
+
+    # Crear archivo en carpeta web
+    cat > /var/www/html/index.html <<EOF
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prueba Carpetas Compartidas</title>
+</head>
+<body>
+    <h1>¡Hola desde Vagrant!</h1>
+    <p>Este archivo fue creado dentro de la VM</p>
+    <p>Pero lo puedes ver desde tu host en: ./proyecto/src/index.html</p>
+    <p>Generado: $(date)</p>
+</body>
+</html>
+EOF
+
+    # Crear logs de ejemplo
+    echo "[$(date)] Aplicación iniciada" > /var/log/miapp/app.log
+    echo "[$(date)] Sistema funcionando correctamente" >> /var/log/miapp/app.log
+
+    # Listar todas las carpetas compartidas
+    echo ""
+    echo "Carpetas montadas:"
+    df -h | grep -E '(vagrant|www|datos|miapp)'
+
+    echo ""
+    echo "✅ Archivos de prueba creados"
+    echo ""
+    echo "Ahora en tu HOST verifica:"
+    echo "  - cat desde-vm.txt"
+    echo "  - cat datos/datos-vm.txt"
+    echo "  - cat proyecto/src/index.html"
+    echo "  - cat proyecto/logs/app.log"
+    echo ""
+
+  SHELL
+
+  # Configuración de recursos
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "VM-Carpetas-Compartidas"
+    vb.memory = "1024"
+    vb.cpus = 1
+  end
+
+end
+
+# ============================================================================
+# EJERCICIOS PRÁCTICOS:
+# ============================================================================
+#
+# 1. SINCRONIZACIÓN BIDIRECCIONAL:
+#
+#    En tu HOST (fuera de la VM):
+#    echo "Archivo desde host" > datos/host-file.txt
+#
+#    En la VM (vagrant ssh):
+#    cat /home/vagrant/datos/host-file.txt
+#
+#    En la VM:
+#    echo "Archivo desde guest" > /home/vagrant/datos/guest-file.txt
+#
+#    En tu HOST:
+#    cat datos/guest-file.txt
+#
+# 2. EDITAR ARCHIVOS EN TIEMPO REAL:
+#
+#    En HOST: Abre proyecto/src/index.html en tu editor favorito
+#    Modifícalo y guarda
+#
+#    En VM: cat /var/www/html/index.html
+#    ¡Deberías ver los cambios inmediatamente!
+#
+# 3. PERMISOS:
+#
+#    En VM:
+#    ls -la /vagrant
+#    ls -la /home/vagrant/datos
+#    ls -la /var/www/html
+#
+#    Observa los dueños y permisos de cada carpeta
+#
+# 4. RENDIMIENTO:
+#
+#    En VM, crea muchos archivos pequeños:
+#    for i in {1..100}; do echo "Archivo $i" > /vagrant/test-$i.txt; done
+#
+#    En HOST, verifica que aparecieron:
+#    ls -l test-*.txt | wc -l
+#
+# ============================================================================
+# SOLUCIÓN DE PROBLEMAS:
+# ============================================================================
+#
+# Problema: "Carpeta no se sincroniza"
+# Solución:
+#   vagrant reload
+#
+# Problema: "Permisos incorrectos"
+# Solución:
+#   Ajusta owner, group y mount_options en el Vagrantfile
+#   vagrant reload
+#
+# Problema: "Muy lento con muchos archivos"
+# Soluciones:
+#   1. Usa type: "nfs" (Linux/Mac)
+#   2. Usa type: "rsync" para carpetas estáticas
+#   3. Excluye node_modules, .git, etc.
+#
+# Problema: "Error mounting"
+# Solución:
+#   Instala VirtualBox Guest Additions:
+#   vagrant plugin install vagrant-vbguest
+#   vagrant vbguest --do install
+#
+# ============================================================================

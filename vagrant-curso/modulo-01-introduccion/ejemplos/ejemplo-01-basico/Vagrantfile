@@ -1,0 +1,77 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# ============================================================================
+# EJEMPLO 1: VAGRANTFILE BÁSICO
+# ============================================================================
+#
+# Este es el Vagrantfile más simple posible.
+# Crea una máquina virtual con Ubuntu 20.04 LTS
+#
+# CÓMO USAR:
+# 1. Abre terminal en este directorio
+# 2. Ejecuta: vagrant up
+# 3. Espera que descargue la box (solo primera vez)
+# 4. Ejecuta: vagrant ssh
+# 5. ¡Estás dentro de Ubuntu!
+#
+# PARA SALIR:
+# - Dentro de la VM: exit
+# - Destruir VM: vagrant destroy
+# ============================================================================
+
+# Todas las configuraciones de Vagrant se hacen dentro de este bloque
+Vagrant.configure("2") do |config|
+
+  # ====================================
+  # CONFIGURACIÓN DE LA BOX (IMAGEN)
+  # ====================================
+
+  # Define qué sistema operativo usar
+  # "ubuntu/focal64" es Ubuntu 20.04 LTS de 64 bits
+  # Esta box se descarga desde Vagrant Cloud automáticamente
+  config.vm.box = "ubuntu/focal64"
+
+  # (Opcional) Puedes especificar una versión exacta de la box
+  # Si no lo haces, usará la última disponible
+  # config.vm.box_version = "20230215.0.0"
+
+  # (Opcional) URL de descarga si no está en Vagrant Cloud
+  # config.vm.box_url = "https://ejemplo.com/mi-box.box"
+
+  # ====================================
+  # ¡ESO ES TODO!
+  # ====================================
+  # Con solo estas líneas tienes una VM funcional
+  # Vagrant se encarga de todo lo demás automáticamente:
+  # - Crear la VM en VirtualBox
+  # - Configurar red (NAT por defecto)
+  # - Configurar SSH
+  # - Montar carpeta compartida en /vagrant
+
+end
+
+# ============================================================================
+# COMANDOS ÚTILES PARA ESTE EJEMPLO:
+# ============================================================================
+#
+# vagrant up          → Crear y encender la VM
+# vagrant ssh         → Conectarse a la VM
+# vagrant status      → Ver estado de la VM
+# vagrant halt        → Apagar la VM
+# vagrant destroy     → Eliminar completamente la VM
+# vagrant reload      → Reiniciar la VM
+#
+# ============================================================================
+# DENTRO DE LA VM PRUEBA:
+# ============================================================================
+#
+# uname -a                    → Ver información del sistema
+# cat /etc/os-release         → Ver versión de Ubuntu
+# df -h                       → Ver espacio en disco
+# free -h                     → Ver memoria RAM
+# ls -la /vagrant             → Ver archivos compartidos
+# pwd                         → Ver directorio actual (/home/vagrant)
+# whoami                      → Ver usuario actual (vagrant)
+#
+# ============================================================================

@@ -1,0 +1,34 @@
+# Vagrant
+.vagrant/
+*.box
+.env
+
+# VirtualBox
+*.vdi
+*.vmdk
+*.vbox
+*.vbox-prev
+
+# Logs
+*.log
+vagrant.log
+
+# Backups
+backups/
+*.sql
+*.sql.gz
+*.tar.gz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+*.tmp
+*.swp
+*~
+
+# IDEs
+.idea/
+.vscode/
+*.sublime-*

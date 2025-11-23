@@ -1,0 +1,164 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# ============================================================================
+# EJEMPLO 2: VAGRANTFILE PERSONALIZADO
+# ============================================================================
+#
+# En este ejemplo aprenderás a:
+# - Personalizar el nombre de la VM
+# - Configurar recursos (CPU y RAM)
+# - Agregar un hostname
+# - Personalizar el provider (VirtualBox)
+#
+# CÓMO USAR:
+# 1. vagrant up
+# 2. vagrant ssh
+# 3. Observa las diferencias con el ejemplo 1
+# ============================================================================
+
+Vagrant.configure("2") do |config|
+
+  # ====================================
+  # CONFIGURACIÓN BÁSICA DE LA VM
+  # ====================================
+
+  # Box a utilizar (Ubuntu 20.04)
+  config.vm.box = "ubuntu/focal64"
+
+  # Verificar actualizaciones de la box al hacer vagrant up
+  # Si hay nueva versión, te avisará (pero no actualiza automáticamente)
+  config.vm.box_check_update = true
+
+  # ====================================
+  # HOSTNAME (nombre dentro de la VM)
+  # ====================================
+
+  # Define el hostname que verás en la terminal dentro de la VM
+  # En lugar de "vagrant@ubuntu-focal" verás "vagrant@mi-servidor-dev"
+  config.vm.hostname = "mi-servidor-dev"
+
+  # ====================================
+  # CONFIGURACIÓN DEL PROVIDER (VirtualBox)
+  # ====================================
+
+  # El bloque 'provider' permite configurar opciones específicas de VirtualBox
+  config.vm.provider "virtualbox" do |vb|
+
+    # Nombre de la VM que aparecerá en VirtualBox GUI
+    # Sin esto, tendría un nombre generado automáticamente
+    vb.name = "MiPrimeraVM-Personalizada"
+
+    # Configurar cantidad de memoria RAM (en MB)
+    # Por defecto Vagrant asigna ~1024 MB (1 GB)
+    # Aquí le damos 2 GB (2048 MB)
+    vb.memory = "2048"
+
+    # Configurar número de CPUs
+    # Por defecto es 1 CPU
+    # Aquí le damos 2 CPUs para mejor rendimiento
+    vb.cpus = 2
+
+    # Habilitar interfaz gráfica de VirtualBox (por defecto es false)
+    # Normalmente NO necesitas esto (se usa solo SSH)
+    # Lo dejamos en false para modo headless (sin interfaz gráfica)
+    vb.gui = false
+
+    # Personalizar descripción de la VM en VirtualBox
+    vb.customize ["modifyvm", :id, "--description", "VM de desarrollo creada con Vagrant - Curso Práctico"]
+
+    # Habilitar símbolos en copiar/pegar (útil si usas GUI)
+    vb.customize ["modifyvm", :id, "--clipboard-mode", "bidirectional"]
+
+    # Mejorar rendimiento de red
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+
+    # Configurar aceleración de video
+    # "on" para habilitar aceleración 3D (si usas GUI)
+    # "off" si solo usas SSH (recomendado)
+    vb.customize ["modifyvm", :id, "--vram", "128"]
+
+  end
+
+  # ====================================
+  # MENSAJE POST-UP (Opcional)
+  # ====================================
+
+  # Este mensaje se mostrará después de que la VM esté lista
+  # Es útil para dar instrucciones al usuario
+  config.vm.post_up_message = <<-MESSAGE
+  ╔════════════════════════════════════════════════════════════╗
+  ║                                                            ║
+  ║  ✅ VM Lista para usar!                                    ║
+  ║                                                            ║
+  ║  Nombre: #{config.vm.hostname}                             ║
+  ║  RAM: 2 GB                                                 ║
+  ║  CPUs: 2                                                   ║
+  ║                                                            ║
+  ║  Para conectarte: vagrant ssh                              ║
+  ║                                                            ║
+  ║  Carpeta compartida: /vagrant                              ║
+  ║                                                            ║
+  ╚════════════════════════════════════════════════════════════╝
+  MESSAGE
+
+end
+
+# ============================================================================
+# EXPLICACIÓN DE LAS PERSONALIZACIONES:
+# ============================================================================
+#
+# 1. HOSTNAME:
+#    - Cambia el prompt de "vagrant@ubuntu-focal" a "vagrant@mi-servidor-dev"
+#    - Útil cuando tienes múltiples VMs
+#
+# 2. NOMBRE EN VIRTUALBOX:
+#    - Aparece en la interfaz gráfica de VirtualBox
+#    - Facilita identificar la VM
+#
+# 3. MEMORIA RAM:
+#    - 2048 MB = 2 GB
+#    - Ajusta según tus necesidades y recursos de tu PC
+#    - Aplicaciones web: 2-4 GB
+#    - Bases de datos: 4-8 GB
+#    - Desarrollo ligero: 1-2 GB
+#
+# 4. CPUs:
+#    - 2 CPUs mejora el rendimiento
+#    - No asignes más CPUs de las que tenga tu PC
+#    - Regla general: usa máximo la mitad de tus CPUs reales
+#
+# 5. CUSTOMIZE:
+#    - vb.customize permite ejecutar comandos de VBoxManage
+#    - Opciones avanzadas de configuración
+#    - Ver más en: https://www.virtualbox.org/manual/ch08.html
+#
+# ============================================================================
+# COMPARACIÓN CON DEFAULTS:
+# ============================================================================
+#
+# SIN PERSONALIZACIÓN:              CON PERSONALIZACIÓN:
+# - Hostname: ubuntu-focal           - Hostname: mi-servidor-dev
+# - Nombre VM: random-id             - Nombre VM: MiPrimeraVM-Personalizada
+# - RAM: 1024 MB                     - RAM: 2048 MB
+# - CPU: 1                           - CPU: 2
+# - Sin mensaje post-up              - Mensaje informativo
+#
+# ============================================================================
+# COMANDOS PARA VERIFICAR:
+# ============================================================================
+#
+# Dentro de la VM (vagrant ssh):
+#
+# hostname              → Ver el hostname configurado
+# free -h               → Ver RAM disponible (debería mostrar ~2GB)
+# nproc                 → Ver número de CPUs (debería mostrar 2)
+# lscpu                 → Información detallada de CPUs
+#
+# Desde el host:
+#
+# VBoxManage showvminfo "MiPrimeraVM-Personalizada" | grep -i memory
+# VBoxManage showvminfo "MiPrimeraVM-Personalizada" | grep -i cpu
+#
+# ============================================================================

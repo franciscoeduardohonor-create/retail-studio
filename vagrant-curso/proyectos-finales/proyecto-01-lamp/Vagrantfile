@@ -1,0 +1,636 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# ============================================================================
+# PROYECTO FINAL 1: STACK LAMP COMPLETO
+# ============================================================================
+#
+# Este proyecto crea un entorno de desarrollo web completo con:
+# - Linux (Ubuntu 20.04)
+# - Apache Web Server
+# - MySQL Database Server
+# - PHP 7.4
+# - WordPress (instalado automáticamente)
+# - phpMyAdmin
+#
+# Autor: Curso de Vagrant
+# Dificultad: ⭐⭐ Intermedia
+# ============================================================================
+
+Vagrant.configure("2") do |config|
+
+  # ====================================
+  # CONFIGURACIÓN BÁSICA
+  # ====================================
+
+  config.vm.box = "ubuntu/focal64"
+  config.vm.hostname = "lamp-server"
+
+  # ====================================
+  # CONFIGURACIÓN DE RED
+  # ====================================
+
+  # Port forwarding
+  config.vm.network "forwarded_port", guest: 80, host: 8080, auto_correct: true
+  config.vm.network "forwarded_port", guest: 443, host: 8443, auto_correct: true
+  config.vm.network "forwarded_port", guest: 3306, host: 3306, auto_correct: true
+
+  # Red privada (opcional, para acceso directo)
+  config.vm.network "private_network", ip: "192.168.33.10"
+
+  # ====================================
+  # CARPETAS COMPARTIDAS
+  # ====================================
+
+  # Carpeta para desarrollo
+  config.vm.synced_folder "./www", "/var/www/html/dev",
+    create: true,
+    owner: "www-data",
+    group: "www-data",
+    mount_options: ["dmode=775,fmode=664"]
+
+  # Carpeta para backups
+  config.vm.synced_folder "./backups", "/home/vagrant/backups",
+    create: true
+
+  # ====================================
+  # PROVIDER (VirtualBox)
+  # ====================================
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.name = "LAMP-Server-Proyecto"
+    vb.memory = "2048"
+    vb.cpus = 2
+
+    # Optimizaciones
+    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+    vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
+    vb.customize ["modifyvm", :id, "--ioapic", "on"]
+  end
+
+  # ====================================
+  # PROVISIONAMIENTO: ACTUALIZAR SISTEMA
+  # ====================================
+
+  config.vm.provision "actualizar", type: "shell", inline: <<-SHELL
+    echo "=========================================="
+    echo "Actualizando sistema..."
+    echo "=========================================="
+
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update -qq
+    apt-get upgrade -y -qq
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO: INSTALAR APACHE
+  # ====================================
+
+  config.vm.provision "apache", type: "shell", inline: <<-SHELL
+    echo "=========================================="
+    echo "Instalando Apache Web Server..."
+    echo "=========================================="
+
+    apt-get install -y apache2
+
+    # Habilitar módulos útiles
+    a2enmod rewrite
+    a2enmod ssl
+    a2enmod headers
+
+    # Configurar Apache
+    cat > /etc/apache2/sites-available/000-default.conf <<'EOF'
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/html
+
+    <Directory /var/www/html>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+EOF
+
+    systemctl restart apache2
+    systemctl enable apache2
+
+    echo "✅ Apache instalado y configurado"
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO: INSTALAR MYSQL
+  # ====================================
+
+  config.vm.provision "mysql", type: "shell", inline: <<-SHELL
+    echo "=========================================="
+    echo "Instalando MySQL Server..."
+    echo "=========================================="
+
+    # Preconfigurar MySQL para instalación no interactiva
+    debconf-set-selections <<< 'mysql-server mysql-server/root_password password root'
+    debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password root'
+
+    apt-get install -y mysql-server mysql-client
+
+    # Configurar MySQL para aceptar conexiones remotas
+    sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/mysql.conf.d/mysqld.cnf
+
+    systemctl restart mysql
+    systemctl enable mysql
+
+    # Crear base de datos y usuario para WordPress
+    mysql -uroot -proot <<MYSQL_SCRIPT
+-- Eliminar usuarios anónimos
+DELETE FROM mysql.user WHERE User='';
+
+-- Eliminar base de datos de prueba
+DROP DATABASE IF EXISTS test;
+
+-- Crear base de datos para WordPress
+CREATE DATABASE IF NOT EXISTS wordpress CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Crear usuario de WordPress
+CREATE USER IF NOT EXISTS 'wpuser'@'localhost' IDENTIFIED BY 'wppass123';
+CREATE USER IF NOT EXISTS 'wpuser'@'%' IDENTIFIED BY 'wppass123';
+
+-- Otorgar permisos
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'localhost';
+GRANT ALL PRIVILEGES ON wordpress.* TO 'wpuser'@'%';
+
+-- Flush privileges
+FLUSH PRIVILEGES;
+
+-- Mostrar bases de datos
+SHOW DATABASES;
+MYSQL_SCRIPT
+
+    echo "✅ MySQL instalado y configurado"
+    echo "   Root password: root"
+    echo "   WordPress DB: wordpress"
+    echo "   WordPress User: wpuser"
+    echo "   WordPress Pass: wppass123"
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO: INSTALAR PHP
+  # ====================================
+
+  config.vm.provision "php", type: "shell", inline: <<-SHELL
+    echo "=========================================="
+    echo "Instalando PHP y extensiones..."
+    echo "=========================================="
+
+    apt-get install -y \
+      php \
+      php-mysql \
+      php-curl \
+      php-gd \
+      php-mbstring \
+      php-xml \
+      php-xmlrpc \
+      php-soap \
+      php-intl \
+      php-zip \
+      libapache2-mod-php
+
+    # Configurar PHP
+    cat > /etc/php/7.4/apache2/conf.d/99-custom.ini <<EOF
+upload_max_filesize = 64M
+post_max_size = 64M
+memory_limit = 256M
+max_execution_time = 300
+date.timezone = America/Mexico_City
+EOF
+
+    systemctl restart apache2
+
+    echo "✅ PHP instalado y configurado"
+    php -v
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO: INSTALAR PHPMYADMIN
+  # ====================================
+
+  config.vm.provision "phpmyadmin", type: "shell", inline: <<-SHELL
+    echo "=========================================="
+    echo "Instalando phpMyAdmin..."
+    echo "=========================================="
+
+    # Preconfigurar phpMyAdmin
+    debconf-set-selections <<< 'phpmyadmin phpmyadmin/dbconfig-install boolean true'
+    debconf-set-selections <<< 'phpmyadmin phpmyadmin/app-password-confirm password root'
+    debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/admin-pass password root'
+    debconf-set-selections <<< 'phpmyadmin phpmyadmin/mysql/app-pass password root'
+    debconf-set-selections <<< 'phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2'
+
+    apt-get install -y phpmyadmin
+
+    # Habilitar configuración de Apache
+    ln -sf /etc/phpmyadmin/apache.conf /etc/apache2/conf-available/phpmyadmin.conf
+    a2enconf phpmyadmin
+
+    systemctl reload apache2
+
+    echo "✅ phpMyAdmin instalado"
+    echo "   URL: http://localhost:8080/phpmyadmin"
+    echo "   Usuario: root"
+    echo "   Password: root"
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO: INSTALAR WORDPRESS
+  # ====================================
+
+  config.vm.provision "wordpress", type: "shell", inline: <<-SHELL
+    echo "=========================================="
+    echo "Instalando WordPress..."
+    echo "=========================================="
+
+    cd /tmp
+
+    # Descargar WordPress
+    echo "Descargando WordPress..."
+    wget -q https://wordpress.org/latest.tar.gz
+
+    # Extraer
+    echo "Extrayendo archivos..."
+    tar -xzf latest.tar.gz
+
+    # Copiar archivos
+    echo "Instalando WordPress en /var/www/html/wordpress..."
+    rm -rf /var/www/html/wordpress
+    cp -r wordpress /var/www/html/
+    chown -R www-data:www-data /var/www/html/wordpress
+
+    # Configurar WordPress
+    cd /var/www/html/wordpress
+    cp wp-config-sample.php wp-config.php
+
+    # Configurar base de datos
+    sed -i "s/database_name_here/wordpress/" wp-config.php
+    sed -i "s/username_here/wpuser/" wp-config.php
+    sed -i "s/password_here/wppass123/" wp-config.php
+    sed -i "s/localhost/localhost/" wp-config.php
+
+    # Generar salt keys (opcional, para más seguridad)
+    SALT=$(curl -s https://api.wordpress.org/secret-key/1.1/salt/)
+    STRING='put your unique phrase here'
+    printf '%s\n' "g/$STRING/d" a "$SALT" . w | ed -s wp-config.php
+
+    # Limpiar
+    rm /tmp/latest.tar.gz
+    rm -rf /tmp/wordpress
+
+    echo "✅ WordPress instalado"
+    echo "   URL: http://localhost:8080/wordpress"
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO: HERRAMIENTAS ÚTILES
+  # ====================================
+
+  config.vm.provision "tools", type: "shell", inline: <<-SHELL
+    echo "=========================================="
+    echo "Instalando herramientas útiles..."
+    echo "=========================================="
+
+    apt-get install -y \
+      curl \
+      wget \
+      vim \
+      git \
+      htop \
+      unzip \
+      zip \
+      tree \
+      net-tools
+
+    # Composer (para desarrollo PHP)
+    echo "Instalando Composer..."
+    curl -sS https://getcomposer.org/installer | php
+    mv composer.phar /usr/local/bin/composer
+    chmod +x /usr/local/bin/composer
+
+    # WP-CLI (herramienta CLI para WordPress)
+    echo "Instalando WP-CLI..."
+    curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+    chmod +x wp-cli.phar
+    mv wp-cli.phar /usr/local/bin/wp
+
+    echo "✅ Herramientas instaladas"
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO: PÁGINA DE INICIO
+  # ====================================
+
+  config.vm.provision "homepage", type: "shell", inline: <<-SHELL
+    echo "Creando página de inicio..."
+
+    cat > /var/www/html/index.php <<'EOF'
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LAMP Server - Vagrant</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .service {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #00ff88;
+        }
+        .service h3 {
+            margin-bottom: 15px;
+            color: #00ff88;
+        }
+        .service p {
+            margin: 10px 0;
+        }
+        .link {
+            display: inline-block;
+            background: #00ff88;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .link:hover {
+            background: #00cc6f;
+        }
+        .info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success { color: #00ff88; }
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 LAMP Server</h1>
+            <p>Proyecto Final - Curso de Vagrant</p>
+        </div>
+
+        <div class="card">
+            <h2 class="success">✅ Stack Instalado Correctamente</h2>
+            <div class="grid">
+                <div class="info">
+                    <strong>🐧 Sistema:</strong>
+                    <?php echo php_uname('s') . ' ' . php_uname('r'); ?>
+                </div>
+                <div class="info">
+                    <strong>🌐 Servidor Web:</strong>
+                    <?php echo apache_get_version(); ?>
+                </div>
+                <div class="info">
+                    <strong>🐘 PHP:</strong>
+                    <?php echo phpversion(); ?>
+                </div>
+                <div class="info">
+                    <strong>🗄️ MySQL:</strong>
+                    <?php
+                    $link = mysqli_connect('localhost', 'root', 'root');
+                    echo mysqli_get_server_info($link);
+                    mysqli_close($link);
+                    ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📌 Servicios Disponibles</h2>
+            <div class="grid">
+                <div class="service">
+                    <h3>WordPress</h3>
+                    <p>Sistema de gestión de contenidos</p>
+                    <p><strong>DB:</strong> wordpress</p>
+                    <p><strong>Usuario:</strong> wpuser</p>
+                    <a href="/wordpress" class="link">Abrir WordPress</a>
+                </div>
+
+                <div class="service">
+                    <h3>phpMyAdmin</h3>
+                    <p>Administración de MySQL</p>
+                    <p><strong>Usuario:</strong> root</p>
+                    <p><strong>Password:</strong> root</p>
+                    <a href="/phpmyadmin" class="link">Abrir phpMyAdmin</a>
+                </div>
+
+                <div class="service">
+                    <h3>Carpeta de Desarrollo</h3>
+                    <p>Tus archivos sincronizados</p>
+                    <p><strong>Ruta:</strong> /var/www/html/dev</p>
+                    <a href="/dev" class="link">Ver Archivos</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ Información del Sistema</h2>
+            <p><strong>Hostname:</strong> <?php echo gethostname(); ?></p>
+            <p><strong>IP Server:</strong> <?php echo $_SERVER['SERVER_ADDR']; ?></p>
+            <p><strong>Document Root:</strong> <?php echo $_SERVER['DOCUMENT_ROOT']; ?></p>
+            <p><strong>Fecha/Hora:</strong> <?php echo date('Y-m-d H:i:s'); ?></p>
+        </div>
+
+        <div class="card">
+            <h2>📚 Comandos Útiles</h2>
+            <p><code>vagrant ssh</code> - Conectarse a la VM</p>
+            <p><code>wp --info</code> - Información de WP-CLI</p>
+            <p><code>composer --version</code> - Versión de Composer</p>
+            <p><code>mysql -uroot -proot</code> - Conectar a MySQL</p>
+        </div>
+    </div>
+</body>
+</html>
+EOF
+
+    chown www-data:www-data /var/www/html/index.php
+
+    echo "✅ Página de inicio creada"
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO: SCRIPT DE BACKUP
+  # ====================================
+
+  config.vm.provision "backup-script", type: "shell", privileged: false, inline: <<-SHELL
+    echo "Creando script de backup..."
+
+    cat > /home/vagrant/backup.sh <<'EOF'
+#!/bin/bash
+# Script de backup para WordPress y MySQL
+
+BACKUP_DIR="/home/vagrant/backups"
+DATE=$(date +%Y%m%d-%H%M%S)
+
+echo "Iniciando backup..."
+
+# Backup de WordPress
+echo "Respaldando WordPress..."
+tar -czf $BACKUP_DIR/wordpress-$DATE.tar.gz /var/www/html/wordpress
+
+# Backup de base de datos
+echo "Respaldando base de datos..."
+mysqldump -uroot -proot wordpress > $BACKUP_DIR/wordpress-db-$DATE.sql
+
+# Comprimir SQL
+gzip $BACKUP_DIR/wordpress-db-$DATE.sql
+
+echo "Backup completado en: $BACKUP_DIR"
+ls -lh $BACKUP_DIR/*$DATE*
+EOF
+
+    chmod +x /home/vagrant/backup.sh
+
+    echo "✅ Script de backup creado: ~/backup.sh"
+  SHELL
+
+  # ====================================
+  # PROVISIONAMIENTO: STATUS (SIEMPRE)
+  # ====================================
+
+  config.vm.provision "status", type: "shell", run: "always", inline: <<-SHELL
+    clear
+    echo "=========================================="
+    echo "       LAMP SERVER STATUS"
+    echo "=========================================="
+    echo ""
+    echo "🌐 Apache: $(systemctl is-active apache2)"
+    echo "🗄️  MySQL: $(systemctl is-active mysql)"
+    echo ""
+    echo "=========================================="
+    echo "       ACCESO RÁPIDO"
+    echo "=========================================="
+    echo ""
+    echo "📱 Página principal: http://localhost:8080"
+    echo "📱 WordPress: http://localhost:8080/wordpress"
+    echo "📱 phpMyAdmin: http://localhost:8080/phpmyadmin"
+    echo ""
+    echo "=========================================="
+    echo "       INFORMACIÓN"
+    echo "=========================================="
+    echo ""
+    echo "💾 Uptime: $(uptime -p)"
+    echo "💻 Memoria: $(free -h | grep Mem | awk '{print $3 "/" $2}')"
+    echo "💿 Disco: $(df -h / | tail -1 | awk '{print $3 "/" $2 " (" $5 ")"}')"
+    echo ""
+    echo "=========================================="
+  SHELL
+
+  # ====================================
+  # MENSAJE POST-UP
+  # ====================================
+
+  config.vm.post_up_message = <<-MSG
+
+    ╔═══════════════════════════════════════════════════════╗
+    ║                                                       ║
+    ║         ✅ LAMP SERVER LISTO PARA USAR               ║
+    ║                                                       ║
+    ╠═══════════════════════════════════════════════════════╣
+    ║                                                       ║
+    ║  🌐 URLs:                                            ║
+    ║     • Principal: http://localhost:8080                ║
+    ║     • WordPress: http://localhost:8080/wordpress      ║
+    ║     • phpMyAdmin: http://localhost:8080/phpmyadmin    ║
+    ║                                                       ║
+    ║  🔐 Credenciales MySQL:                              ║
+    ║     • Root: root / root                               ║
+    ║     • WordPress DB: wordpress                         ║
+    ║     • WordPress User: wpuser / wppass123              ║
+    ║                                                       ║
+    ║  📂 Carpetas:                                        ║
+    ║     • Desarrollo: ./www → /var/www/html/dev          ║
+    ║     • Backups: ./backups                              ║
+    ║                                                       ║
+    ║  🛠️  Comandos útiles:                                ║
+    ║     • vagrant ssh          (conectarse)               ║
+    ║     • ~/backup.sh          (crear backup)             ║
+    ║     • wp --info            (WP-CLI info)              ║
+    ║                                                       ║
+    ╚═══════════════════════════════════════════════════════╝
+
+    ¡Abre tu navegador en http://localhost:8080 para comenzar!
+
+  MSG
+
+end
+
+# ============================================================================
+# NOTAS PARA EL ESTUDIANTE:
+# ============================================================================
+#
+# COMANDOS PRINCIPALES:
+#   vagrant up              → Levantar el servidor
+#   vagrant halt            → Apagar el servidor
+#   vagrant reload          → Reiniciar el servidor
+#   vagrant ssh             → Conectarse por SSH
+#   vagrant destroy         → Eliminar completamente
+#
+# DENTRO DE LA VM:
+#   ~/backup.sh             → Crear backup
+#   wp --info               → Info de WordPress CLI
+#   mysql -uroot -proot     → Conectar a MySQL
+#   composer --version      → Versión de Composer
+#
+# ARCHIVOS IMPORTANTES:
+#   ./www/                  → Tu código de desarrollo
+#   ./backups/              → Backups generados
+#
+# TROUBLESHOOTING:
+#   Si algo falla:
+#   1. vagrant destroy -f
+#   2. vagrant up
+#   3. Revisa logs con: vagrant up --debug
+#
+# ============================================================================

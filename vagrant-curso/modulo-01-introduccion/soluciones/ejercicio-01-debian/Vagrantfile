@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Solución Ejercicio 1: VM con Debian
+
+Vagrant.configure("2") do |config|
+
+  # Box de Debian 11 (Bullseye)
+  config.vm.box = "debian/bullseye64"
+
+  # Hostname personalizado
+  config.vm.hostname = "mi-debian-server"
+
+  # Configuración del provider (VirtualBox)
+  config.vm.provider "virtualbox" do |vb|
+    # 1 GB de RAM
+    vb.memory = "1024"
+
+    # 1 CPU
+    vb.cpus = 1
+
+    # Nombre descriptivo en VirtualBox
+    vb.name = "Debian-11-Ejercicio"
+  end
+
+end
